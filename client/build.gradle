@@ -1,0 +1,5 @@
+mainClassName = 'com.adam.ClientMain'
+
+dependencies {
+    compile project(':server')
+}

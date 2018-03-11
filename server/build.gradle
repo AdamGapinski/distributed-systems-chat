@@ -1,0 +1,5 @@
+mainClassName = 'com.adam.ServerMain'
+
+dependencies {
+    compile 'org.springframework:spring-context:5.0.4.RELEASE'
+}
