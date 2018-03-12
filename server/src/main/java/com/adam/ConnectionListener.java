@@ -16,9 +16,9 @@ public class ConnectionListener {
     private final Logger logger;
 
     private ServerSocket socket;
-    private Scheduler scheduler = new Scheduler();
+    private final Scheduler scheduler = new Scheduler();
 
-    private int port = 9024;
+    private final int port = 9024;
 
     @Autowired
     public ConnectionListener(ConnectionEventHandler connectionEventHandler, Logger logger) {
@@ -29,6 +29,7 @@ public class ConnectionListener {
     public void start() throws IOException {
         socket = new ServerSocket(port);
         scheduler.schedule(this::loop);
+        logger.debug("Connection listener started");
     }
 
     private void loop() {

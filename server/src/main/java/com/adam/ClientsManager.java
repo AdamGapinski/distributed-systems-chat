@@ -2,12 +2,15 @@ package com.adam;
 
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
-public class ClientsConnectionManager {
+public class ClientsManager {
 
     private Map<Connection, Client> connectionClientMap = new ConcurrentHashMap<>();
 
@@ -39,6 +42,21 @@ public class ClientsConnectionManager {
                 .stream()
                 .filter(connectionClientEntry -> !connectionClientEntry.getValue().equalConnection(except))
                 .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<ClientSocketInfo> getDatagramSocketsExceptClient(Client except) {
+        return connectionClientMap.values()
+                .stream()
+                .filter(client -> !client.equalDatagramSocket(except))
+                .map(Client::getClientSocketInfo)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<ClientSocketInfo> getAllDatagramSockets() {
+        return connectionClientMap.values()
+                .stream()
+                .map(Client::getClientSocketInfo)
                 .collect(Collectors.toList());
     }
 }

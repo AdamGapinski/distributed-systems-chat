@@ -3,9 +3,7 @@ package com.adam;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -29,10 +27,8 @@ public class Connection {
     }
 
     public void sendMessage(Message message) {
-        scheduler.schedule(() -> {
-            String json = gson.toJson(message);
-            output.println(json);
-        });
+        String json = gson.toJson(message);
+        output.println(json);
     }
 
     public void listen() {
@@ -40,10 +36,8 @@ public class Connection {
             try {
                 while (input.hasNext()) {
                     String json = input.nextLine();
-                    scheduler.schedule(() -> {
-                        Message message = gson.fromJson(json, Message.class);
-                        handler.handleMessage(this, message);
-                    });
+                    Message message = gson.fromJson(json, Message.class);
+                    handler.handleMessage(this, message);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -13,17 +13,17 @@ public class ConnectionEventHandler {
 
     private final MessageSender messageSender;
 
-    private final ClientsConnectionManager clientsConnectionManager;
+    private final ClientsManager clientsManager;
 
     private final Logger logger;
 
     @Autowired
     public ConnectionEventHandler(RegistrationService registrationService,
                                   MessageSender messageSender,
-                                  ClientsConnectionManager clientsConnectionManager, Logger logger) {
+                                  ClientsManager clientsManager, Logger logger) {
         this.registrationService = registrationService;
         this.messageSender = messageSender;
-        this.clientsConnectionManager = clientsConnectionManager;
+        this.clientsManager = clientsManager;
         this.logger = logger;
     }
 
@@ -31,10 +31,10 @@ public class ConnectionEventHandler {
         logger.debug("Received: {}", message);
         switch (message.getMessageType()) {
             case REGISTRATION_REQUEST:
-                registrationService.registerClient(message.getValue(), connection);
+                registrationService.registerClient(message.getValue(), connection, message.getClientSocketInfo());
                 break;
             case TEXT:
-                Optional<Client> clientOptional = clientsConnectionManager.getClientByConnection(connection);
+                Optional<Client> clientOptional = clientsManager.getClientByConnection(connection);
                 if (clientOptional.isPresent()) {
                     Client client = clientOptional.get();
                     messageSender.sendMessageFrom(client, message.getValue());
@@ -46,8 +46,8 @@ public class ConnectionEventHandler {
     }
 
     public void handleClose(Connection connection) {
-        clientsConnectionManager.getClientByConnection(connection).ifPresent(client -> {
-            clientsConnectionManager.removeConnection(connection);
+        clientsManager.getClientByConnection(connection).ifPresent(client -> {
+            clientsManager.removeConnection(connection);
             messageSender.sendMessageFromServer(String.format("User %s has left", client.getUser().getNick()));
         });
     }

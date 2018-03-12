@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageSender {
 
-    private final ClientsConnectionManager clientsConnectionManager;
+    private final ClientsManager clientsManager;
 
     private final Logger logger;
 
     @Autowired
-    public MessageSender(ClientsConnectionManager clientsConnectionManager, Logger logger) {
-        this.clientsConnectionManager = clientsConnectionManager;
+    public MessageSender(ClientsManager clientsManager, Logger logger) {
+        this.clientsManager = clientsManager;
         this.logger = logger;
     }
 
@@ -38,20 +38,16 @@ public class MessageSender {
 
     public void sendMessageFromServer(String messageString) {
         Message message = new Message(messageString);
-        clientsConnectionManager.getAllConnections().forEach(connection -> {
-            message.setMessageType(MessageType.TEXT);
-            connection.sendMessage(message);
-        });
+        message.setMessageType(MessageType.TEXT);
+        clientsManager.getAllConnections().forEach(connection -> connection.sendMessage(message));
         logger.debug("Sent: {}", message);
     }
 
     public void sendMessageFrom(Client client, String messageString) {
         Message message = new Message(messageString);
-        clientsConnectionManager.getConnectionsExceptClient(client).forEach(connection -> {
-            message.setMessageType(MessageType.TEXT);
-            message.setFrom(client.getUser());
-            connection.sendMessage(message);
-        });
+        message.setMessageType(MessageType.TEXT);
+        message.setFrom(client.getUser());
+        clientsManager.getConnectionsExceptClient(client).forEach(connection -> connection.sendMessage(message));
         logger.debug("Sent: {}", message);
     }
 }

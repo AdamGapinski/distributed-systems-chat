@@ -2,11 +2,21 @@ package com.adam;
 
 public class Client {
     private final User user;
-    private final Connection connection;
+    private Connection connection;
+    private final ClientSocketInfo clientSocketInfo;
 
-    public Client(User user, Connection connection) {
+    public Client(User user, Connection connection, ClientSocketInfo clientSocketInfo) {
         this.user = user;
         this.connection = connection;
+        this.clientSocketInfo = clientSocketInfo;
+    }
+
+    public boolean equalConnection(Client other) {
+        return connection.equals(other.getConnection());
+    }
+
+    public boolean equalDatagramSocket(Client other) {
+        return clientSocketInfo.equals(other.getClientSocketInfo());
     }
 
     public User getUser() {
@@ -17,7 +27,7 @@ public class Client {
         return connection;
     }
 
-    public boolean equalConnection(Client other) {
-        return connection.equals(other.getConnection());
+    public ClientSocketInfo getClientSocketInfo() {
+        return clientSocketInfo;
     }
 }

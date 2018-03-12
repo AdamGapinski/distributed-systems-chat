@@ -4,20 +4,14 @@ public class Message {
     private String value;
     private MessageType messageType;
     private User from;
+    private ClientSocketInfo clientSocketInfo;
 
     public Message(String value) {
         this.value = value;
     }
 
-    public Message() {
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public MessageType getMessageType() {
@@ -43,5 +37,13 @@ public class Message {
                 ", messageType=" + messageType +
                 ", from=" + from +
                 '}';
+    }
+
+    public ClientSocketInfo getClientSocketInfo() {
+        return clientSocketInfo;
+    }
+
+    public void setClientSocketInfo(ClientSocketInfo clientSocketInfo) {
+        this.clientSocketInfo = clientSocketInfo;
     }
 }

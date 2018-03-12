@@ -7,15 +7,8 @@ public class User {
         this.nick = nick;
     }
 
-    public User() {
-    }
-
     public String getNick() {
         return nick;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
     }
 
     @Override
